@@ -9,7 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const formJSON = [
     {
-        fields: [
+    fields: [
             {
                 id: "firstname",
                 label: "First Name",
