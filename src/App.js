@@ -2,8 +2,9 @@
 
 import logo from "./logo.svg";
 import "./App.css";
-import DynamicFormBulder from "./DynamicFormBuilder/DynamicFormBuilder";
+import DynamicFormBulder from "./DynamicFormBuilder/DynamicFormBuilder.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
+import react from "react";
 
 const formJSON = [
   {
