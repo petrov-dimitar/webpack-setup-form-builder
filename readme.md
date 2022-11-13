@@ -1,16 +1,23 @@
 <!-- @format -->
 
-The purpose of the homework is to exercise what you have learned from Setup React project from scratch. Create a zip folder containing all assets, scenario examples, and a readme file how to start.
+## Description
 
-From the previous homework Dynamic Form Builder (Class Components) transfer your code to a React Starter template which you created from scratch. The React Starter should include:
+This project is an exercise for setting up a react app (dynamic json-to-form builder) with webpack from scratch. The following functionalities exist within the project:
 
-Babel
-Webpack and Webpack dev server
-React
-React Fast Refresh
-ESLint and Prettier
-Note: you are not limited to the above requirements
+-   Webpack / webpack dev server
+-   Babel
+-   React
+-   ESlint
+-   Prettier
+-   husky
+-   Automated validation check for commit messages wit commitlint
+-   Firebase hosting
+-   Automated git jobs for deployment on git push
 
-Create a private repo in Gitlab and add your work so far. In the repo, add a build pipeline which will build and deploy (CI/CD) your code to Gitlab pages. In addition, integrate Husky in your CI/CD process.
+## Link to Hosted website
 
-Please, provide a url to the deployed application in the readme file.
+https://telerik-webpack-form-builder.firebaseapp.com/
+
+## Link to repo
+
+https://github.com/petrov-dimitar/webpack-setup-form-builder
