@@ -26,7 +26,7 @@ const DynamicFormBulder = (props) => {
             //   Apply custom onSubmit from props
             if (props.onSubmit) {
                 // Transform data parameter to desired structure.
-                const data = [...props.formJSON[0].fields].map((field) => {
+                const data = [...props.formJSON.fields].map((field) => {
                     const element = document.getElementById(field.id);
                     if (element) {
                         return { [element.id]: element.value };
@@ -49,14 +49,12 @@ const DynamicFormBulder = (props) => {
     };
 
     return (
-        <>
-            <h3> Dynamic Form Builder With Class Components 01</h3>
-
+        <div>
             {isValid && <Alert variant="success">Successful Form Submit</Alert>}
 
             <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                <Form.Group as={Col} md="4">
-                    {props.formJSON[0].fields.map((field) => {
+                <Form.Group as={Col}>
+                    {props.formJSON.fields.map((field) => {
                         if (field.type === "select") {
                             return (
                                 <div key={field.id}>
@@ -118,9 +116,11 @@ const DynamicFormBulder = (props) => {
                     )}
                 </Form.Group>
 
-                <Button type="submit">Submit form</Button>
+                <div style={{ marginTop: "16px", textAlign: "center" }}>
+                    <Button type="submit">Submit form</Button>
+                </div>
             </Form>
-        </>
+        </div>
     );
 };
 
