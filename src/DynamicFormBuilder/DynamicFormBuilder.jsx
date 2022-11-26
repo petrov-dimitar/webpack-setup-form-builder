@@ -52,7 +52,9 @@ const DynamicFormBulder = (props) => {
                         if (field.type === "select") {
                             return (
                                 <div key={field.id}>
-                                    <Form.Label>{field.label}</Form.Label>
+                                    <Form.Label className={field.required && "required-field"}>
+                                        {field.label}
+                                    </Form.Label>
                                     <Form.Select aria-label="Default select example" id={field.id}>
                                         {field.options.map((option) => (
                                             <option key={option.label} value={option.label}>
@@ -77,7 +79,9 @@ const DynamicFormBulder = (props) => {
                         } else {
                             return (
                                 <div key={field.id}>
-                                    <Form.Label>{field.label}</Form.Label>
+                                    <Form.Label className={field.required && "required-field"}>
+                                        {field.label}
+                                    </Form.Label>
                                     <Form.Control
                                         required={field.required}
                                         type={field.type}
