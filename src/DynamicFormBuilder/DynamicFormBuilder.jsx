@@ -9,6 +9,7 @@ import Alert from "react-bootstrap/Alert";
 const DynamicFormBulder = (props) => {
     const [validated, setValidated] = useState(false);
     const [isValid, setIsValid] = useState(false);
+    const [showEmailField, setShowEmailField] = useState(false);
 
     const handleSubmit = (event) => {
         const form = event.currentTarget;
@@ -32,6 +33,13 @@ const DynamicFormBulder = (props) => {
                     }
                     return undefined;
                 });
+
+                if (showEmailField) {
+                    const element = document.getElementById("email");
+                    data.push({
+                        email: element.value,
+                    });
+                }
 
                 props.onSubmit(data);
             }
@@ -73,6 +81,9 @@ const DynamicFormBulder = (props) => {
                                         label={field.label}
                                         feedback={field.required ? "Please check that box before submit" : undefined}
                                         feedbackType="invalid"
+                                        onChange={(e) => {
+                                            setShowEmailField(e.target.checked);
+                                        }}
                                     />
                                 </div>
                             );
@@ -96,6 +107,15 @@ const DynamicFormBulder = (props) => {
                             );
                         }
                     })}
+
+                    {showEmailField && (
+                        <div>
+                            <Form.Label>email</Form.Label>
+                            <Form.Control type="email" placeholder="email" id="email" />
+                            <Form.Control.Feedback type="invalid">Please provide a valid email</Form.Control.Feedback>
+                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                        </div>
+                    )}
                 </Form.Group>
 
                 <Button type="submit">Submit form</Button>
