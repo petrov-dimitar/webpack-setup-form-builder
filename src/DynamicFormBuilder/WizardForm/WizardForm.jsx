@@ -1,32 +1,36 @@
 /** @format */
 
-import react, { useState } from "react";
+import react, { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
-import Alert from "react-bootstrap/Alert";
 
-const WizardForm = (props) => {
-    const [validated, setValidated] = useState(false);
-    const [isValid, setIsValid] = useState(false);
+const WizardForm = ({ onSubmit, formJSON, setCurrentStep, triggerSubmit, currentStep }) => {
     const [showEmailField, setShowEmailField] = useState(false);
+    const [formRef, setFormRef] = useState(null);
+
+    useEffect(() => {
+        if (formRef) {
+            formRef.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+        }
+    }, [triggerSubmit]);
 
     const handleSubmit = (event) => {
         const form = event.currentTarget;
-
         if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
+            setCurrentStep((prev) => ({ ...prev, isValid: false, validated: true }));
         } else {
             // Make state to valid to show success and reset form.
-            setIsValid(true);
-            setValidated(false);
             event.preventDefault();
 
+            setCurrentStep((prev) => ({ ...prev, isValid: true, validated: true }));
+
             //   Apply custom onSubmit from props
-            if (props.onSubmit) {
+            if (onSubmit) {
                 // Transform data parameter to desired ructure.
-                const data = [...props.formJSON.fields].map((field) => {
+                const data = [formJSON.fields].map((field) => {
                     const element = document.getElementById(field.id);
                     if (element) {
                         return { [element.id]: element.value };
@@ -41,20 +45,22 @@ const WizardForm = (props) => {
                     });
                 }
 
-                props.onSubmit(data);
+                onSubmit(data);
             }
             return;
         }
-        setValidated(true);
     };
 
     return (
         <div>
-            {isValid && <Alert variant="success">Successful Form Submit</Alert>}
-
-            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <Form
+                noValidate
+                validated={currentStep.validated}
+                onSubmit={handleSubmit}
+                ref={(newRef) => setFormRef(newRef)}
+            >
                 <Form.Group as={Col}>
-                    {props.formJSON.fields.map((field) => {
+                    {formJSON.fields.map((field) => {
                         if (field.type === "select") {
                             return (
                                 <div key={field.id}>
@@ -115,10 +121,6 @@ const WizardForm = (props) => {
                         </div>
                     )}
                 </Form.Group>
-
-                <div style={{ marginTop: "16px", textAlign: "center" }}>
-                    <Button type="submit">Submit form</Button>
-                </div>
             </Form>
         </div>
     );
