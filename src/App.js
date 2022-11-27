@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
 import { wizardJSON } from "./DynamicFormBuilder/mockData/data";
 import { useState } from "react";
+import Stepper from "./DynamicFormBuilder/Stepper/Stepper";
 
 const App = () => {
     const [currentStep, setCurrentStep] = useState({ data: wizardJSON.pages[0], stepNumber: 0 });
@@ -30,7 +31,15 @@ const App = () => {
 
     return (
         <>
+            <div
+                style={{
+                    marginBottom: "40px",
+                }}
+            >
+                <Stepper currentIndex={currentStep.stepNumber} items={wizardJSON.pages}></Stepper>
+            </div>
             <h2 style={{ textAlign: "center" }}>{currentStep && currentStep.data.title}</h2>
+
             <div
                 className="container"
                 style={{

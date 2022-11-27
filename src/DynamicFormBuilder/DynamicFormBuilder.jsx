@@ -25,7 +25,7 @@ const DynamicFormBulder = (props) => {
 
             //   Apply custom onSubmit from props
             if (props.onSubmit) {
-                // Transform data parameter to desired structure.
+                // Transform data parameter to desired ructure.
                 const data = [...props.formJSON.fields].map((field) => {
                     const element = document.getElementById(field.id);
                     if (element) {
