@@ -1,7 +1,7 @@
 /** @format */
-import "./App.css";
+import "App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import DynamicFormBuilder from "./DynamicFormBuilder";
+import DynamicFormBuilder from "DynamicFormBuilder/";
 
 const App = () => {
     return (
