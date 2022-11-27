@@ -62,5 +62,5 @@ module.exports = {
         }),
         new ESLintPlugin(),
     ],
-    mode: "production",
+    mode: "development",
 };

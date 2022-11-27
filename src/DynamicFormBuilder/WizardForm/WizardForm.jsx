@@ -1,7 +1,6 @@
 /** @format */
 
-import react, { useEffect, useRef, useState } from "react";
-import Button from "react-bootstrap/Button";
+import react, { useEffect, useState } from "react";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
@@ -30,7 +29,7 @@ const WizardForm = ({ onSubmit, formJSON, setCurrentStep, triggerSubmit, current
             //   Apply custom onSubmit from props
             if (onSubmit) {
                 // Transform data parameter to desired ructure.
-                const data = [formJSON.fields].map((field) => {
+                const data = formJSON.fields.map((field) => {
                     const element = document.getElementById(field.id);
                     if (element) {
                         return { [element.id]: element.value };

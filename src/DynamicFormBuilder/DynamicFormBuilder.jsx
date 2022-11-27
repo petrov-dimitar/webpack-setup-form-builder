@@ -17,12 +17,34 @@ const DynamicFormBuilder = () => {
     });
     const [triggerSubmit, setTriggerSubmit] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const [userData, setUserData] = useState([]);
 
     const isLastStep = currentStep.stepNumber + 1 > wizardJSON.pages.length - 1;
 
     const handleNextStepClick = () => {
         setTriggerSubmit((prev) => !prev);
     };
+
+    const handlePrevStepClick = () => {
+        if (wizardJSON.pages[currentStep.stepNumber - 1]) {
+            setCurrentStep({
+                data: wizardJSON.pages[currentStep.stepNumber - 1],
+                stepNumber: currentStep.stepNumber - 1,
+            });
+            setUserData((prev) => [...prev].slice(0, -1));
+        }
+    };
+
+    const handleFinishClick = () => {
+        handleNextStepClick(true);
+    };
+
+    useEffect(() => {
+        if (isLastStep) {
+            console.log("userData", userData);
+            setShowSuccessAlert(true);
+        }
+    }, [userData]);
 
     useEffect(() => {
         if (wizardJSON.pages[currentStep.stepNumber + 1] && currentStep.isValid) {
@@ -37,19 +59,6 @@ const DynamicFormBuilder = () => {
             }
         }
     }, [currentStep.isValid]);
-
-    const handlePrevStepClick = () => {
-        if (wizardJSON.pages[currentStep.stepNumber - 1]) {
-            setCurrentStep({
-                data: wizardJSON.pages[currentStep.stepNumber - 1],
-                stepNumber: currentStep.stepNumber - 1,
-            });
-        }
-    };
-
-    const handleFinishClick = () => {
-        handleNextStepClick(true);
-    };
 
     return (
         <>
@@ -74,7 +83,9 @@ const DynamicFormBuilder = () => {
                 }}
             >
                 <div>
-                    <Button onClick={handlePrevStepClick}>Previous Step</Button>
+                    <Button onClick={handlePrevStepClick} disabled={showSuccessAlert}>
+                        Previous Step
+                    </Button>
                 </div>
 
                 <WizardForm
@@ -82,13 +93,16 @@ const DynamicFormBuilder = () => {
                     currentStep={currentStep}
                     setCurrentStep={setCurrentStep}
                     triggerSubmit={triggerSubmit}
+                    userData={userData}
                     onSubmit={(data) => {
-                        console.log(data);
+                        setUserData([...userData, data]);
                     }}
                 />
                 <div>
                     {isLastStep ? (
-                        <Button onClick={handleFinishClick}>Finish</Button>
+                        <Button onClick={handleFinishClick} disabled={showSuccessAlert}>
+                            Finish
+                        </Button>
                     ) : (
                         <Button onClick={handleNextStepClick}>Next Step</Button>
                     )}
