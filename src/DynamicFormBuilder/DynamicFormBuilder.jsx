@@ -1,127 +1,69 @@
 /** @format */
-
-import react, { useState } from "react";
+import { useState } from "react";
+import WizardForm from "./WizardForm";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Alert from "react-bootstrap/Alert";
+import Stepper from "./Stepper";
+import { wizardJSON } from "./mockData/data";
+import "../App.css";
 
-const DynamicFormBulder = (props) => {
-    const [validated, setValidated] = useState(false);
-    const [isValid, setIsValid] = useState(false);
-    const [showEmailField, setShowEmailField] = useState(false);
+const DynamicFormBuilder = () => {
+    const [currentStep, setCurrentStep] = useState({ data: wizardJSON.pages[0], stepNumber: 0 });
 
-    const handleSubmit = (event) => {
-        const form = event.currentTarget;
-
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-        } else {
-            // Make state to valid to show success and reset form.
-            setIsValid(true);
-            setValidated(false);
-            event.preventDefault();
-
-            //   Apply custom onSubmit from props
-            if (props.onSubmit) {
-                // Transform data parameter to desired ructure.
-                const data = [...props.formJSON.fields].map((field) => {
-                    const element = document.getElementById(field.id);
-                    if (element) {
-                        return { [element.id]: element.value };
-                    }
-                    return undefined;
-                });
-
-                if (showEmailField) {
-                    const element = document.getElementById("email");
-                    data.push({
-                        email: element.value,
-                    });
-                }
-
-                props.onSubmit(data);
-            }
-            return;
+    const handleNextStepClick = () => {
+        if (wizardJSON.pages[currentStep.stepNumber + 1]) {
+            setCurrentStep({
+                data: wizardJSON.pages[currentStep.stepNumber + 1],
+                stepNumber: currentStep.stepNumber + 1,
+            });
         }
-        setValidated(true);
+    };
+
+    const handlePrevStepClick = () => {
+        if (wizardJSON.pages[currentStep.stepNumber - 1]) {
+            setCurrentStep({
+                data: wizardJSON.pages[currentStep.stepNumber - 1],
+                stepNumber: currentStep.stepNumber - 1,
+            });
+        }
     };
 
     return (
-        <div>
-            {isValid && <Alert variant="success">Successful Form Submit</Alert>}
+        <>
+            <div
+                style={{
+                    marginBottom: "40px",
+                }}
+            >
+                <Stepper currentIndex={currentStep.stepNumber} items={wizardJSON.pages}></Stepper>
+            </div>
+            <h2 style={{ textAlign: "center" }}>{currentStep && currentStep.data.title}</h2>
 
-            <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                <Form.Group as={Col}>
-                    {props.formJSON.fields.map((field) => {
-                        if (field.type === "select") {
-                            return (
-                                <div key={field.id}>
-                                    <Form.Label className={field.required && "required-field"}>
-                                        {field.label}
-                                    </Form.Label>
-                                    <Form.Select aria-label="Default select example" id={field.id}>
-                                        {field.options.map((option) => (
-                                            <option key={option.label} value={option.label}>
-                                                {option.label}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
-                                </div>
-                            );
-                        } else if (field.type === "checkbox") {
-                            return (
-                                <div key={field.id}>
-                                    <Form.Check
-                                        required={field.required}
-                                        id={field.id}
-                                        label={field.label}
-                                        feedback={field.required ? "Please check that box before submit" : undefined}
-                                        feedbackType="invalid"
-                                        onChange={(e) => {
-                                            setShowEmailField(e.target.checked);
-                                        }}
-                                    />
-                                </div>
-                            );
-                        } else {
-                            return (
-                                <div key={field.id}>
-                                    <Form.Label className={field.required && "required-field"}>
-                                        {field.label}
-                                    </Form.Label>
-                                    <Form.Control
-                                        required={field.required}
-                                        type={field.type}
-                                        placeholder={field.placeholder}
-                                        id={field.id}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        Please provide a valid {field.label}
-                                    </Form.Control.Feedback>
-                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                </div>
-                            );
-                        }
-                    })}
-
-                    {showEmailField && (
-                        <div>
-                            <Form.Label>email</Form.Label>
-                            <Form.Control type="email" placeholder="email" id="email" />
-                            <Form.Control.Feedback type="invalid">Please provide a valid email</Form.Control.Feedback>
-                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                        </div>
-                    )}
-                </Form.Group>
-
-                <div style={{ marginTop: "16px", textAlign: "center" }}>
-                    <Button type="submit">Submit form</Button>
+            <div
+                className="container"
+                style={{
+                    display: "flex",
+                    justifyItems: "center",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}
+            >
+                <div>
+                    <Button onClick={handlePrevStepClick}>Previous Step</Button>
                 </div>
-            </Form>
-        </div>
+
+                <WizardForm
+                    formJSON={currentStep.data}
+                    onSubmit={(data) => {
+                        console.log(data);
+                    }}
+                />
+                <div>
+                    <Button onClick={handleNextStepClick}>Next Step</Button>
+                </div>
+            </div>
+        </>
     );
 };
 
-export default DynamicFormBulder;
+export default DynamicFormBuilder;
